@@ -13,7 +13,7 @@ import {
   View,
   FlatList,
   ActivityIndicator,
-  Alert,
+  SafeAreaView,
   RefreshControl,
   TouchableOpacity,
 } from 'react-native';
@@ -241,7 +241,7 @@ const App = () => {
 
   // ----------- リスト表示 ------------
   return (
-    <View style={{flex: 1, paddingVertical: 40}}>
+    <SafeAreaView style={{flex: 1, paddingVertical: 40}}>
       <FlatList
         ref={ref}
         data={data}
@@ -333,7 +333,7 @@ const App = () => {
           />
         }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
