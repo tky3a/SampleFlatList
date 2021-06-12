@@ -249,11 +249,7 @@ const App = () => {
         onEndReached={() => {
           console.log('下にひっぱる');
           setRefreshFlag(true);
-          setTimeout(() => {
-            downFetch();
-            // ここでfalse
-            setRefreshFlag(false);
-          }, 3000);
+          downFetch();
         }}
         onEndReachedThreshold={0}
         ListFooterComponent={() => (
