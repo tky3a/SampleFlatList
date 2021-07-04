@@ -16,319 +16,323 @@ import {
   SafeAreaView,
   RefreshControl,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import moment from 'moment';
 
-const App = () => {
-  const [refreshFlag, setRefreshFlag] = useState(); // 上下の読み込みフラグ
-  const [height, setHeight] = useState(0); // 新規取得した要素の高さ
-  const ref = useRef(null);
-  let num = []; // 新規取得したリストの高さを格納
-
-  useEffect(() => {
-    // スクロールでデータを取得したらフラグをfalseに戻す
-    if (refreshFlag) {
-      setRefreshFlag(false);
-    }
-  }, [refreshFlag]);
-
-  // 表示の最初の日付(TODO: 今日の日付にする)
-  const [firstDate, setFirstDate] = useState('2021-06-01');
-  // 表示の最後の日付(TODO: 今日の日付+20日後)
-  const [lastDate, setLastDate] = useState('2021-06-20');
-
-  // ------- 初期データ ----------
-  const defaultData = [
+export const App = () => {
+  const data = [
     {
-      dateTime: '2021-06-01',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
+      label: 'ヘッダ要素A',
+      list: ['データA1', 'データA2', 'データA3', 'データA4', 'データA5'],
     },
     {
-      dateTime: '2021-06-02',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
+      label: 'ヘッダ要素B',
+      list: ['データB1', 'データB2'],
     },
     {
-      dateTime: '2021-06-03',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
+      label: 'ヘッダ要素C',
+      list: ['データC1', 'データC2', 'データC3'],
     },
     {
-      dateTime: '2021-06-04',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
+      label: 'ヘッダ要素D',
+      list: ['データD1', 'データD2', 'データD3', 'データD4'],
     },
     {
-      dateTime: '2021-06-05',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-06',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-07',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-08',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-09',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-10',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-11',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-12',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-13',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-14',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-15',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-16',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-17',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-18',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-19',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
-    },
-    {
-      dateTime: '2021-06-20',
-      datas: [
-        {id: 1, name: 'name', email: 'aaaa'},
-        {id: 2, name: 'name', email: 'aaaa'},
-      ],
+      label: 'ヘッダ要素E',
+      list: ['データE1', 'データE2', 'データE3', 'データE4', 'データE5'],
     },
   ];
-  // データ設定
-  const [data, setData] = useState(defaultData);
 
-  // ------- 上スクロール ---------
-  const upFetch = () => {
-    // 現在表示されている最初の日付
-    const mo = moment(new Date(firstDate)).format('YYYY-MM-DD');
-    // 20日前取得
-    let addFirstDate = [];
-    addFirstDate = [...Array(20)].map((_, i) => {
-      // 前20日追加
-      let add = moment(mo)
-        .subtract(20 - i, 'days')
-        .format('YYYY-MM-DD');
-      // データ返却
-      return {
-        dateTime: add,
-        datas: [
-          {id: 1, name: 'name', email: 'aaaa'},
-          {id: 2, name: 'name', email: 'aaaa'},
-        ],
-      };
-    });
-    // 表示の一番上の日付をセット
-    setFirstDate(addFirstDate[0].dateTime);
-    // 表示する数を追加
-    setData([...addFirstDate, ...data]);
-    // 表示するリスト位置を設定
-    ref.current?.scrollToOffset({
-      offset: height,
-      animated: false,
-    });
-  };
+  // 表示データからstickyHeaderIndicesを取得
+  const stickyHeaderIndices = data.reduce(
+    (acc, cur, index, _list) => {
+      // 最後の要素は使用しない
+      if (_list.length - 1 !== index) {
+        // 直前のSticky要素の位置を取得
+        const lastStickyIndex = acc[acc.length - 1];
+        // ヘッダとしての1要素 + 内包しているlist要素数を足して新しいStickyのindexとして設定
+        acc.push(lastStickyIndex + cur.list.length + 1);
+      }
+      console.log(acc);
+      return acc;
+    },
+    [0],
+  );
 
-  // ------- 下スクロール ---------
-  const downFetch = () => {
-    const mo = moment(new Date(lastDate)).format('YYYY-MM-DD');
-    // 20日後取得
-    let addLastDate = [];
-    addLastDate = [...Array(20)].map((_, i) => {
-      // 後20日追加
-      let add = moment(mo)
-        .add(i + 1, 'days')
-        .format('YYYY-MM-DD');
-      // データ返却
-      return {
-        dateTime: add,
-        datas: [
-          {id: 1, name: 'name', email: 'aaaa'},
-          {id: 2, name: 'name', email: 'aaaa'},
-        ],
-      };
-    });
-    // 表示の一番最後の日付をセット
-    setLastDate(addLastDate[19].dateTime);
-    // 表示する数を追加
-    setData([...data, ...addLastDate]);
-  };
-
-  // ----------- リスト表示 ------------
-  return (
-    <SafeAreaView style={{flex: 1, paddingVertical: 40}}>
-      <FlatList
-        ref={ref}
-        data={data}
-        keyExtractor={item => item.dateTime}
-        onEndReached={() => {
-          console.log('下にひっぱる');
-          setRefreshFlag(true);
-          downFetch();
-        }}
-        onEndReachedThreshold={0}
-        ListFooterComponent={() => (
-          // refreshFlagがtrueの場合にフッターにインジケーター
-          <ActivityIndicator size="large" animating={refreshFlag} />
-        )}
-        renderItem={({item, index}) => {
-          // TODO: コンポーネント化
-          return (
-            <View
-              // 20件毎取得することを想定
-              // 上に増えた分の高さを取得
-              onLayout={
-                index < 20
-                  ? e => {
-                      /* コンポーネントの高さを取得し、stateに保存 */
-                      num = [...num, Math.floor(e.nativeEvent.layout.height)];
-                      // 配列が20になったら配列の数値をたす
-                      if (num.length === 20) {
-                        let total = num.reduce((sum, element) => {
-                          return sum + element;
-                        }, 0);
-                        // 合計をセット
-                        setHeight(total);
-                      }
-                    }
-                  : null
-              }
-              key={item.dateTime}
-              style={{flex: 1, backgroundColor: 'yellow'}}>
-              <Text>{item.dateTime}</Text>
-              {item.datas.map(data => (
-                <View
-                  key={data.id}
-                  style={{
-                    flexDirection: 'row',
-                    // marginVertical: 10,
-                    // paddingHorizontal: 10,
-                    backgroundColor: 'red',
-                    borderWidth: 1,
-                  }}>
-                  {/* 横表示 */}
-                  <View style={{backgroundColor: 'gray', paddingHorizontal: 5}}>
-                    <Text>日付を表示</Text>
-                  </View>
-                  {/* 縦表示 */}
-                  <View style={{flex: 1}}>
-                    <Text style={{fontSize: 24}} onPress={() => alert(data.id)}>
-                      {data.id} {data.name} {data.email}
-                    </Text>
-                    <Text style={{fontSize: 24}} onPress={() => alert(data.id)}>
-                      {data.id} {data.name} {data.email}
-                    </Text>
-                  </View>
-                  {/* 横表示 */}
-                  <View style={{backgroundColor: 'gray'}}>
-                    <TouchableOpacity
-                      style={{flex: 1}}
-                      onPress={() => console.log(1234)}>
-                      <Text>アイコン</Text>
-                      <Text>タップ</Text>
-                    </TouchableOpacity>
-                  </View>
+  const renderItem = ({item}) => (
+    <View style={{flex: 1}}>
+      <ScrollView>
+        <ScrollView horizontal={true}>
+          {data.map((d, index) => {
+            console.log(index);
+            return (
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'column'}}>
+                  <Text>xxx</Text>
+                  <Text>xxx</Text>
+                  <Text>xxx</Text>
                 </View>
-              ))}
-            </View>
-          );
-        }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshFlag}
-            onRefresh={() => {
-              console.log('上にひっぱる');
-              setRefreshFlag(true);
-              upFetch();
-            }}
-          />
-        }
-      />
+                <View style={{flex: 1, backgroundColor: 'white'}}>
+                  <Text>xxxxx</Text>
+                  <Text>xxxxx</Text>
+                </View>
+                <View style={{flex: 1, flexDirection: 'row'}}></View>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    backgroundColor: 'red',
+                  }}>
+                  <Text>ssss</Text>
+                  {data.map((d, index) => {
+                    return [
+                      <View key={`header_${d.label}`} style={{flex: 1}}>
+                        <Text>{d.label}</Text>
+                        <Text>xxxxxxxxxxxxx</Text>
+                      </View>,
+                      ...d.list.map(record => {
+                        return (
+                          <View
+                            key={`${d.list}_${record}`}
+                            style={{padding: 10}}>
+                            <Text>{record}</Text>
+                          </View>
+                        );
+                      }),
+                    ];
+                  })}
+                </View>
+              </View>
+            );
+          })}
+        </ScrollView>
+      </ScrollView>
+    </View>
+  );
+
+  const renderItem2 = ({item}) => (
+    <View style={{flex: 1, flexDirection: 'row'}}>
+      {data.map((d, index) => {
+        console.log(index);
+        return (
+          <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'red'}}>
+            <Text>ssss</Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView
+        stickyHeaderIndices={[1]}
+        horizontal={false}
+        // stickyHeaderIndices={[1]}
+        style={{flex: 1}}>
+        {/* <View style={{flex: 1}}> */}
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <View horizontal={true}>
+            {[...Array(1)].map((_, i) => (
+              <View key={i} style={{}}>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ヘッダー{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  6の塊{i}
+                </Text>
+              </View>
+            ))}
+          </View>
+          <ScrollView horizontal={true}>
+            {[...Array(11)].map((_, i) => (
+              <View key={i} style={{}}>
+                <Text
+                  style={{
+                    borderWidth: 1,
+                    paddingHorizontal: 10,
+                    // position: 'absolute',
+                  }}>
+                  ヘッダー{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  bbの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ccの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ffの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ggの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  aaの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  bbの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ccの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ffの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ggの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  aaの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  bbの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ccの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ffの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ggの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  aaの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  bbの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ccの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ffの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ggの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  aaの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  bbの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ccの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ffの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ggの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  aaの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  bbの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ccの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ffの塊{i}
+                </Text>
+                <Text style={{borderWidth: 1, paddingHorizontal: 10}}>
+                  ggの塊{i}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+        {/* </View> */}
+      </ScrollView>
     </SafeAreaView>
   );
 };
